@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  usuarios-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: microser-usuarios
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - microservices
+
+networks:
+  microservices:
+    driver: bridge
