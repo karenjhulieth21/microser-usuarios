@@ -30,14 +30,7 @@ export abstract class Entity<T extends { id: any }> {
   }
 
   equals(object?: Entity<T>): boolean {
-    if (object == null || object == undefined) {
-      return false;
-    }
-
-    if (this === object) {
-      return true;
-    }
-
+    if (!object) return false;
     return this._id === object._id;
   }
 }

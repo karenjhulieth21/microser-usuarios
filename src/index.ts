@@ -1,5 +1,5 @@
 // Base Classes Exports
-export { Entity } from './domain/base-classes/entity';
+export { Entity } from './domain/entities/entity';
 export { ValueObject } from './domain/base-classes/value-object';
 export { DomainEvent } from './domain/base-classes/domain-event';
 export { DomainException } from './domain/base-classes/domain-exception';

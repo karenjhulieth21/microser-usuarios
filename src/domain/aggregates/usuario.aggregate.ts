@@ -1,4 +1,4 @@
-import { Entity } from '../base-classes/entity';
+import { Entity } from '../entities/entity';
 import { Email } from '../value-objects/email';
 import { Name } from '../value-objects/name';
 import { UsuarioCreado, UsuarioActualizado, UsuarioEliminado } from '../events/usuario-events';
