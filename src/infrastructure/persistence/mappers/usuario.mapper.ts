@@ -1,8 +1,8 @@
 import { Mapper } from './base-mapper';
-import { UsuarioResponseDTO } from '../../application/dto/usuario.dto';
-import { Usuario } from '../../domain/aggregates/usuario.aggregate';
-import { Email } from '../../domain/value-objects/email';
-import { Name } from '../../domain/value-objects/name';
+import { UsuarioResponseDTO } from '../../../application/dto/usuario.dto';
+import { Usuario } from '../../../domain/aggregates/usuario.aggregate';
+import { Email } from '../../../domain/value-objects/email';
+import { Name } from '../../../domain/value-objects/name';
 
 export class UsuarioMapper extends Mapper<Usuario, UsuarioResponseDTO> {
   public toPersistence(domain: Usuario): any {
@@ -17,18 +17,14 @@ export class UsuarioMapper extends Mapper<Usuario, UsuarioResponseDTO> {
   }
 
   public toDomain(raw: any): Usuario {
-    return Usuario.reconstruct({
-      id: raw.id,
-      email: new Email({ value: raw.email }),
-      nombre: new Name({
-        firstName: raw.firstName,
-        lastName: raw.lastName,
-      }),
-      creadoEn: raw.creadoEn,
-      actualizadoEn: raw.actualizadoEn,
-    });
-  }
-
+  return Usuario.reconstruct({
+    id: raw.id,
+    email: Email.create(raw.email),
+    nombre: Name.create(raw.firstName, raw.lastName),
+    creadoEn: raw.creadoEn,
+    actualizadoEn: raw.actualizadoEn,
+  });
+}
   public toDTO(domain: Usuario): UsuarioResponseDTO {
     return {
       id: domain['_id'],

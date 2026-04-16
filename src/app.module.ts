@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EventEmitterProviderModule } from './infrastructure/providers/event-emitter.provider';
 import { UsuarioController } from './infrastructure/controllers/usuario.controller';
-import { UsuarioRepository } from './infrastructure/persistence/repositories/usuario.repository';
+import { MongoUsuarioRepository } from './infrastructure/persistence/repositories/mongo-usuario.repository';
 import { CrearUsuarioUseCase } from './application/use-cases/crear-usuario.use-case';
 import { ActualizarUsuarioUseCase } from './application/use-cases/actualizar-usuario.use-case';
 import { EliminarUsuarioUseCase } from './application/use-cases/eliminar-usuario.use-case';
@@ -27,7 +27,7 @@ import { UsuarioSaga } from './application/sagas/usuario.saga';
     // Infrastructure Layer
     {
       provide: 'IUsuarioRepository',
-      useClass: UsuarioRepository,
+      useClass: MongoUsuarioRepository,
     },
     // Sagas
     UsuarioSaga,
