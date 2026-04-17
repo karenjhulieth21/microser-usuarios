@@ -1,4 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
+import { ensureUsuarioCollectionSchema } from './repositories/schemas/usuario.schema';
 
 let connection: MongoClient;
 let db: Db;
@@ -16,8 +17,10 @@ export async function connectMongoDB(): Promise<Db> {
   connection = new MongoClient(uri);
   await connection.connect();
   db = connection.db();
+  await db.command({ ping: 1 });
+  await ensureUsuarioCollectionSchema(db);
 
-  console.log('✅ Conectado a MongoDB Atlas');
+  console.log(`✅ Conectado a MongoDB Atlas (${db.databaseName})`);
   return db;
 }
 
@@ -31,6 +34,8 @@ export function getMongoDb(): Db {
 export async function disconnectMongoDB(): Promise<void> {
   if (connection) {
     await connection.close();
+    connection = undefined as unknown as MongoClient;
+    db = undefined as unknown as Db;
     console.log('❌ Desconectado de MongoDB');
   }
 }

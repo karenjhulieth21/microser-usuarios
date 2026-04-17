@@ -9,6 +9,7 @@ async function bootstrap() {
     await connectMongoDB();
 
     const app = await NestFactory.create(AppModule);
+    app.enableCors();
     app.setGlobalPrefix('api');
 
     const port = process.env.PORT || 3002;

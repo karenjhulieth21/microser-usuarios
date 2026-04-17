@@ -17,4 +17,11 @@ export class UsuarioDomainException extends DomainException {
   static invalidEmail(): UsuarioDomainException {
     return new UsuarioDomainException('El email proporcionado no es válido', 'INVALID_EMAIL');
   }
+
+  static invalidInstitutionalEmail(): UsuarioDomainException {
+    return new UsuarioDomainException(
+      'El email debe pertenecer al dominio @correounivalle.edu.co',
+      'INVALID_INSTITUTIONAL_EMAIL'
+    );
+  }
 }
