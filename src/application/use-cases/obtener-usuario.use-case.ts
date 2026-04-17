@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
-import { Usuario } from '../../domain/aggregates/usuario.aggregate';
+import { Usuario } from '../../domain/entities/usuario'
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
 
 @Injectable()

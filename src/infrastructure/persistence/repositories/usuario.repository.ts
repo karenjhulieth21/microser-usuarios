@@ -1,17 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
-import { Usuario } from '../../domain/aggregates/usuario.aggregate';
+import { IUsuarioRepository } from '../../../domain/ports/usuario-repository.port';
+import { Usuario } from '../../../domain/entities/usuario';
 import { UsuarioMapper } from '../mappers/usuario.mapper';
 
-// En-memory store para demo (reemplazar con base de datos real)
-@Injectable()
-export class UsuarioRepository implements IUsuarioRepository {
+export class UsuarioRepositoryMemory implements IUsuarioRepository {
   private usuarios: Map<string, any> = new Map();
   private mapper = new UsuarioMapper();
 
-  async save(usuario: Usuario): Promise<void> {
+  async save(usuario: Usuario): Promise<Usuario> {
     const data = this.mapper.toPersistence(usuario);
-    this.usuarios.set(usuario['_id'], data);
+    this.usuarios.set(usuario.id, data);
+    return usuario;
   }
 
   async findById(id: string): Promise<Usuario | null> {
@@ -34,10 +32,8 @@ export class UsuarioRepository implements IUsuarioRepository {
   }
 
   async findAll(): Promise<Usuario[]> {
-    const usuarios: Usuario[] = [];
-    for (const data of this.usuarios.values()) {
-      usuarios.push(this.mapper.toDomain(data));
-    }
-    return usuarios;
+    return Array.from(this.usuarios.values()).map(data =>
+      this.mapper.toDomain(data)
+    );
   }
 }

@@ -17,8 +17,7 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "incremental": true,
-    "types": ["node"],
-    "ignoreDeprecations": "6.0"
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": [

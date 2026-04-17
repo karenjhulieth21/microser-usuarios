@@ -5,16 +5,18 @@ import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-e
 @Injectable()
 export class EliminarUsuarioUseCase {
   constructor(
-    @Inject('IUsuarioRepository') private readonly usuarioRepository: IUsuarioRepository,
+    @Inject('IUsuarioRepository')
+    private readonly usuarioRepository: IUsuarioRepository,
   ) {}
 
   async execute(usuarioId: string): Promise<void> {
     const usuario = await this.usuarioRepository.findById(usuarioId);
+
     if (!usuario) {
       throw UsuarioDomainException.userNotFound(usuarioId);
     }
 
-    usuario.eliminar();
+    
     await this.usuarioRepository.delete(usuarioId);
   }
 }

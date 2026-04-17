@@ -1,7 +1,7 @@
-import { Usuario } from '../aggregates/usuario.aggregate';
+import { Usuario } from '../entities/usuario';
 
 export interface IUsuarioRepository {
-  save(usuario: Usuario): Promise<void>;
+  save(usuario: Usuario): Promise<Usuario>; // ✅ ARREGLADO
   findById(id: string): Promise<Usuario | null>;
   findByEmail(email: string): Promise<Usuario | null>;
   delete(id: string): Promise<void>;

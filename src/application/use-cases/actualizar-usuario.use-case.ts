@@ -1,41 +1,29 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
-import { Email } from '../../domain/value-objects/email';
-import { Name } from '../../domain/value-objects/name';
-import { ActualizarUsuarioDTO } from '../dto/usuario.dto';
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
-import { UsuarioApplicationService } from '../services/usuario-application.service';
+import { ActualizarUsuarioDTO } from '../dto/usuario.dto';
 
 @Injectable()
 export class ActualizarUsuarioUseCase {
   constructor(
-    @Inject('IUsuarioRepository') private readonly usuarioRepository: IUsuarioRepository,
-    private readonly applicationService: UsuarioApplicationService,
+    @Inject('IUsuarioRepository')
+    private readonly usuarioRepository: IUsuarioRepository,
   ) {}
 
-  async execute(dto: ActualizarUsuarioDTO): Promise<void> {
-    // Obtener usuario
-    const usuario = await this.usuarioRepository.findById(dto.id);
+  async execute(id: string, dto: ActualizarUsuarioDTO): Promise<void> {
+
+    const usuario = await this.usuarioRepository.findById(id);
+
     if (!usuario) {
-      throw UsuarioDomainException.userNotFound(dto.id);
+      throw UsuarioDomainException.userNotFound(id);
     }
 
-    // Validar que el nuevo email no existe (si cambió)
-    if (usuario.Email.value !== dto.email) {
-      const usuarioConEmail = await this.usuarioRepository.findByEmail(dto.email);
-      if (usuarioConEmail) {
-        throw UsuarioDomainException.userAlreadyExists(dto.email);
-      }
-    }
+    // 👇 actualización simple (sin métodos raros)
+    const usuarioActualizado = {
+      ...usuario,
+      email: dto.email ?? usuario.email
+    };
 
-    // Crear value objects
-    const email = Email.create(dto.email);
-    const nombre = Name.create(dto.firstName, dto.lastName);
-
-    // Actualizar agregado
-    usuario.actualizar(email, nombre);
-
-    // Persistir y publicar eventos
-    await this.applicationService.saveAndPublishEvents(usuario);
+    await this.usuarioRepository.save(usuarioActualizado as any);
   }
 }

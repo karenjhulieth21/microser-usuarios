@@ -1,10 +1,27 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+
 import { CrearUsuarioUseCase } from '../../application/use-cases/crear-usuario.use-case';
 import { ActualizarUsuarioUseCase } from '../../application/use-cases/actualizar-usuario.use-case';
 import { EliminarUsuarioUseCase } from '../../application/use-cases/eliminar-usuario.use-case';
 import { ObtenerUsuarioUseCase } from '../../application/use-cases/obtener-usuario.use-case';
 import { ListarUsuariosUseCase } from '../../application/use-cases/listar-usuarios.use-case';
-import { CrearUsuarioDTO, ActualizarUsuarioDTO, UsuarioResponseDTO } from '../../application/dto/usuario.dto';
+
+import {
+  CrearUsuarioDTO,
+  ActualizarUsuarioDTO,
+  UsuarioResponseDTO,
+} from '../../application/dto/usuario.dto';
+
 import { UsuarioMapper } from '../persistence/mappers/usuario.mapper';
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
 
@@ -13,13 +30,14 @@ export class UsuarioController {
   private mapper = new UsuarioMapper();
 
   constructor(
-    private crearUsuarioUseCase: CrearUsuarioUseCase,
-    private actualizarUsuarioUseCase: ActualizarUsuarioUseCase,
-    private eliminarUsuarioUseCase: EliminarUsuarioUseCase,
-    private obtenerUsuarioUseCase: ObtenerUsuarioUseCase,
-    private listarUsuariosUseCase: ListarUsuariosUseCase,
+    private readonly crearUsuarioUseCase: CrearUsuarioUseCase,
+    private readonly actualizarUsuarioUseCase: ActualizarUsuarioUseCase,
+    private readonly eliminarUsuarioUseCase: EliminarUsuarioUseCase,
+    private readonly obtenerUsuarioUseCase: ObtenerUsuarioUseCase,
+    private readonly listarUsuariosUseCase: ListarUsuariosUseCase,
   ) {}
 
+  
   @Post()
   async crearUsuario(@Body() dto: CrearUsuarioDTO): Promise<{ id: string }> {
     try {
@@ -33,15 +51,14 @@ export class UsuarioController {
     }
   }
 
+  
   @Put(':id')
-  async actualizarUsuario(@Param('id') id: string, @Body() dto: CrearUsuarioDTO): Promise<void> {
+  async actualizarUsuario(
+    @Param('id') id: string,
+    @Body() dto: ActualizarUsuarioDTO
+  ): Promise<void> {
     try {
-      await this.actualizarUsuarioUseCase.execute({
-        id,
-        email: dto.email,
-        firstName: dto.firstName,
-        lastName: dto.lastName,
-      });
+      await this.actualizarUsuarioUseCase.execute(id, dto);
     } catch (error) {
       if (error instanceof UsuarioDomainException) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -50,6 +67,7 @@ export class UsuarioController {
     }
   }
 
+  
   @Delete(':id')
   async eliminarUsuario(@Param('id') id: string): Promise<void> {
     try {
@@ -62,6 +80,7 @@ export class UsuarioController {
     }
   }
 
+  
   @Get(':id')
   async obtenerUsuario(@Param('id') id: string): Promise<UsuarioResponseDTO> {
     try {
@@ -74,6 +93,7 @@ export class UsuarioController {
       throw error;
     }
   }
+
 
   @Get()
   async listarUsuarios(): Promise<UsuarioResponseDTO[]> {

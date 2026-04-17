@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import type { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
-import { Usuario } from '../../domain/aggregates/usuario.aggregate';
+import { Usuario } from '../../domain/entities/usuario'
 
 /**
  * Adaptador que implementa la persistencia AND publicación de eventos

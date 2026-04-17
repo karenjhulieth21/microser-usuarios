@@ -12,6 +12,7 @@ import { ListarUsuariosUseCase } from './application/use-cases/listar-usuarios.u
 import { UsuarioApplicationService } from './application/services/usuario-application.service';
 import { UsuarioSaga } from './application/sagas/usuario.saga';
 
+
 @Module({
   imports: [EventEmitterProviderModule],
   controllers: [AppController, UsuarioController],

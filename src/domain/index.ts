@@ -1,5 +1,5 @@
 // Domain Layer Exports
-export { Usuario } from './aggregates/usuario.aggregate';
+export { Usuario } from './entities/usuario';
 export { Email } from './value-objects/email';
 export { Name } from './value-objects/name';
 export { UsuarioCreado, UsuarioActualizado, UsuarioEliminado } from './events/usuario-events';
