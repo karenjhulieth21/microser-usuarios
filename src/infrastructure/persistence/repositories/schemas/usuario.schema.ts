@@ -1,19 +1,31 @@
 import { Db } from 'mongodb';
 
 export const USUARIO_COLLECTION = 'usuarios';
-export const UNIVALLE_EMAIL_PATTERN = '^[A-Za-z0-9._%+-]+@correounivalle\\.edu\\.co$';
+export const UNIVALLE_EMAIL_PATTERN =
+  '^[A-Za-z0-9._%+-]+@correounivalle\\.edu\\.co$';
 
 export interface UsuarioDocument {
   _id: string;
   id: string;
   email: string;
-  password: string;
+  passwordHash: string;
+  mustChangePassword: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const usuarioCollectionValidator = {
   $jsonSchema: {
     bsonType: 'object',
-    required: ['_id', 'id', 'email', 'password'],
+    required: [
+      '_id',
+      'id',
+      'email',
+      'passwordHash',
+      'mustChangePassword',
+      'createdAt',
+      'updatedAt',
+    ],
     additionalProperties: false,
     properties: {
       _id: {
@@ -26,12 +38,24 @@ export const usuarioCollectionValidator = {
       },
       email: {
         bsonType: 'string',
-        description: 'Correo del usuario',
+        description: 'Correo institucional del usuario',
         pattern: UNIVALLE_EMAIL_PATTERN,
       },
-      password: {
+      passwordHash: {
         bsonType: 'string',
-        description: 'Hash o valor de password persistido',
+        description: 'Hash de la contrasena del usuario',
+      },
+      mustChangePassword: {
+        bsonType: 'bool',
+        description: 'Indica si el usuario debe cambiar la contrasena al ingresar',
+      },
+      createdAt: {
+        bsonType: 'date',
+        description: 'Fecha de creacion del usuario',
+      },
+      updatedAt: {
+        bsonType: 'date',
+        description: 'Fecha de ultima actualizacion del usuario',
       },
     },
   },
@@ -53,8 +77,7 @@ export async function ensureUsuarioCollectionSchema(db: Db): Promise<void> {
     });
   }
 
-  await db.collection<UsuarioDocument>(USUARIO_COLLECTION).createIndex(
-    { email: 1 },
-    { unique: true, name: 'uq_usuarios_email' }
-  );
+  await db
+    .collection<UsuarioDocument>(USUARIO_COLLECTION)
+    .createIndex({ email: 1 }, { unique: true, name: 'uq_usuarios_email' });
 }

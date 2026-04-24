@@ -1,8 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
 import { ActualizarUsuarioDTO } from '../dto/usuario.dto';
-import { Usuario } from '../../domain/entities/usuario';
 import { Email } from '../../domain/value-objects/email';
 
 @Injectable()
@@ -19,9 +18,9 @@ export class ActualizarUsuarioUseCase {
       throw UsuarioDomainException.userNotFound(id);
     }
 
-    let email = usuario.email;
-
     if (dto.email) {
+      let email: string;
+
       try {
         email = Email.create(dto.email).value;
       } catch (error) {
@@ -36,14 +35,10 @@ export class ActualizarUsuarioUseCase {
       if (usuarioConEmail && usuarioConEmail.id !== usuario.id) {
         throw UsuarioDomainException.userAlreadyExists(email);
       }
+
+      usuario.updateEmail(email);
     }
 
-    const usuarioActualizado = Usuario.reconstruct({
-      id: usuario.id,
-      email,
-      password: usuario.password,
-    });
-
-    await this.usuarioRepository.save(usuarioActualizado);
+    await this.usuarioRepository.save(usuario);
   }
 }

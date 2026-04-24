@@ -1,9 +1,13 @@
-import { Entity } from "./entity";
+import { randomUUID } from 'crypto';
+import { Entity } from './entity';
 
 interface UsuarioProps {
   id: string;
   email: string;
-  password: string;
+  passwordHash: string;
+  mustChangePassword: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class Usuario extends Entity<UsuarioProps> {
@@ -14,23 +18,65 @@ export class Usuario extends Entity<UsuarioProps> {
     this.props = props;
   }
 
-  static create(email: string, password: string): Usuario {
+  static create(email: string, passwordHash: string): Usuario {
+    const now = new Date();
+
     return new Usuario({
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       email,
-      password
+      passwordHash,
+      mustChangePassword: true,
+      createdAt: now,
+      updatedAt: now,
     });
   }
 
   static reconstruct(props: UsuarioProps): Usuario {
-    return new Usuario(props);
+    return new Usuario({
+      ...props,
+      createdAt: new Date(props.createdAt),
+      updatedAt: new Date(props.updatedAt),
+    });
   }
 
-  get email() {
+  updateEmail(email: string): void {
+    this.props.email = email;
+    this.touch();
+  }
+
+  assignTemporaryPassword(passwordHash: string): void {
+    this.props.passwordHash = passwordHash;
+    this.props.mustChangePassword = true;
+    this.touch();
+  }
+
+  changePassword(passwordHash: string): void {
+    this.props.passwordHash = passwordHash;
+    this.props.mustChangePassword = false;
+    this.touch();
+  }
+
+  private touch(): void {
+    this.props.updatedAt = new Date();
+  }
+
+  get email(): string {
     return this.props.email;
   }
 
-  get password() {
-    return this.props.password;
+  get passwordHash(): string {
+    return this.props.passwordHash;
+  }
+
+  get mustChangePassword(): boolean {
+    return this.props.mustChangePassword;
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this.props.updatedAt;
   }
 }

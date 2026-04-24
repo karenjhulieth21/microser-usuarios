@@ -7,21 +7,44 @@ export class UsuarioDomainException extends DomainException {
   }
 
   static userNotFound(id: string): UsuarioDomainException {
-    return new UsuarioDomainException(`Usuario ${id} no encontrado`, 'USER_NOT_FOUND');
+    return new UsuarioDomainException(
+      `Usuario ${id} no encontrado`,
+      'USER_NOT_FOUND',
+    );
   }
 
   static userAlreadyExists(email: string): UsuarioDomainException {
-    return new UsuarioDomainException(`El usuario con email ${email} ya existe`, 'USER_ALREADY_EXISTS');
+    return new UsuarioDomainException(
+      `El usuario con email ${email} ya existe`,
+      'USER_ALREADY_EXISTS',
+    );
   }
 
   static invalidEmail(): UsuarioDomainException {
-    return new UsuarioDomainException('El email proporcionado no es válido', 'INVALID_EMAIL');
+    return new UsuarioDomainException(
+      'El email proporcionado no es valido',
+      'INVALID_EMAIL',
+    );
   }
 
   static invalidInstitutionalEmail(): UsuarioDomainException {
     return new UsuarioDomainException(
       'El email debe pertenecer al dominio @correounivalle.edu.co',
-      'INVALID_INSTITUTIONAL_EMAIL'
+      'INVALID_INSTITUTIONAL_EMAIL',
+    );
+  }
+
+  static invalidCredentials(): UsuarioDomainException {
+    return new UsuarioDomainException(
+      'Las credenciales son incorrectas',
+      'INVALID_CREDENTIALS',
+    );
+  }
+
+  static weakPassword(): UsuarioDomainException {
+    return new UsuarioDomainException(
+      'La nueva contrasena debe tener al menos 8 caracteres',
+      'WEAK_PASSWORD',
     );
   }
 }

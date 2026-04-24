@@ -1,21 +1,45 @@
 export class CrearUsuarioDTO {
   email: string;
-  firstName: string;
-  lastName: string;
 }
 
 export class ActualizarUsuarioDTO {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
+  email?: string;
 }
 
 export class UsuarioResponseDTO {
   id: string;
   email: string;
-  nombre: string;
-  apellido: string;
-  creadoEn: Date;
-  actualizadoEn: Date;
+  mustChangePassword: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class SolicitarAccesoDTO {
+  email: string;
+}
+
+export class SolicitarAccesoResponseDTO {
+  userId: string;
+  email: string;
+  mustChangePassword: boolean;
+  message: string;
+  temporaryPasswordPreview?: string;
+}
+
+export class LoginDTO {
+  email: string;
+  password: string;
+}
+
+export class LoginResponseDTO {
+  userId: string;
+  email: string;
+  mustChangePassword: boolean;
+  message: string;
+}
+
+export class CambiarPasswordDTO {
+  email: string;
+  currentPassword: string;
+  newPassword: string;
 }
