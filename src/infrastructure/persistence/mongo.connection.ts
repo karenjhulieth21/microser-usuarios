@@ -14,7 +14,9 @@ export async function connectMongoDB(): Promise<Db> {
     throw new Error('MONGODB_URI no está definida en las variables de entorno');
   }
 
-  connection = new MongoClient(uri);
+  connection = new MongoClient(uri, {
+    serverSelectionTimeoutMS: 10000,
+  });
   await connection.connect();
   db = connection.db();
   await db.command({ ping: 1 });
