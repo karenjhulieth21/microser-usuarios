@@ -5,7 +5,7 @@ import { connectMongoDB } from './infrastructure/persistence/mongo.connection';
 
 async function bootstrap() {
   try {
-    // 🔥 Conectar a Mongo primero
+    //  Conectar a Mongo primero
     await connectMongoDB();
 
     const app = await NestFactory.create(AppModule);
@@ -17,8 +17,8 @@ async function bootstrap() {
 
     console.log(`🚀 Aplicación ejecutándose en http://localhost:${port}/api`);
   } catch (error) {
-    console.error('❌ Error iniciando la aplicación:', error);
-    process.exit(1); // 🔥 importante para producción
+    console.error(' Error iniciando la aplicación:', error);
+    process.exit(1); //  importante para producción
   }
 }
 

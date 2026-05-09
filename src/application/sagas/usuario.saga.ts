@@ -19,7 +19,7 @@ export class UsuarioSaga {
   @OnEvent('usuario-creado')
   async handleUsuarioCreado(event: UsuarioCreado) {
     console.log(`
-    🎯 [SAGA] Usuario creado
+     [SAGA] Usuario creado
     ├─ ID: ${event.usuarioId}
     ├─ Email: ${event.email}
     ├─ Nombre: ${event.nombre} ${event.apellido}
@@ -43,7 +43,7 @@ export class UsuarioSaga {
   @OnEvent('usuario-actualizado')
   async handleUsuarioActualizado(event: UsuarioActualizado) {
     console.log(`
-    🔄 [SAGA] Usuario actualizado
+    [SAGA] Usuario actualizado
     ├─ ID: ${event.usuarioId}
     ├─ Email: ${event.email}
     ├─ Nombre: ${event.nombre} ${event.apellido}
@@ -64,7 +64,7 @@ export class UsuarioSaga {
   @OnEvent('usuario-eliminado')
   async handleUsuarioEliminado(event: UsuarioEliminado) {
     console.log(`
-    ⚠️  [SAGA] Usuario eliminado
+      [SAGA] Usuario eliminado
     ├─ ID: ${event.usuarioId}
     └─ Fecha: ${event.dateTimeOccurred.toISOString()}
     `);
