@@ -2,26 +2,26 @@ Este proyecto implementa una arquitectura profesional combinando cuatro patrones
 
 ```
 ARQUITECTURA IMPLEMENTADA
-├── 🎯 DDD (Domain-Driven Design)
-├── 🏗️  Hexagonal (Puertos y Adaptadores)
-├── 🧹 Clean Architecture (Capas limpias)
-└── 🔄 Saga Pattern (Orquestación)
+├── DDD (Domain-Driven Design)
+├── Hexagonal (Puertos y Adaptadores)
+├── Clean Architecture (Capas limpias)
+└── Saga Pattern (Orquestación)
 ```
 
-## 📂 Estructura Simplificada
+## Estructura simplificada
 
 ```
 src/
 ├── shared/              # Código reutilizable
-├── usuarios/            # MÓDULO USUARIOS
-│   ├── domain/          # 🧠 LÓGICA DE NEGOCIO (pura, sin dependencias)
-│   ├── application/     # 📋 CASOS DE USO (orquestan la lógica)
-│   └── infrastructure/  # 🔌 ADAPTADORES (controllers, repos, etc)
+├── usuarios/            # Módulo usuarios
+│   ├── domain/          # Lógica de negocio (pura, sin dependencias)
+│   ├── application/     # Casos de uso (orquestan la lógica)
+│   └── infrastructure/  # Adaptadores (controllers, repos, etc)
 ├── main.ts
 └── app.module.ts
 ```
 
-## 🚀 Quick Start
+## Quick start
 
 ```bash
 # 1. Instalar
@@ -36,41 +36,41 @@ curl -X POST http://localhost:3000/api/usuarios \
   -d '{"email":"test@example.com","firstName":"Juan","lastName":"Pérez"}'
 ```
 
-## 📚 Documentación
+## Documentación
 
-1. **ARCHITECTURE.md** ← LEER PRIMERO (explicación detallada)
-2. **QUICKSTART.md** ← Endpoints y scripts
-3. **EXAMPLES.md** ← Cómo conectar BD, RabbitMQ, tests, etc
-4. **IMPLEMENTATION.md** ← Lo que se ha construido
+1. ARCHITECTURE.md ← Leer primero (explicación detallada)
+2. QUICKSTART.md ← Endpoints y scripts
+3. EXAMPLES.md ← Cómo conectar BD, RabbitMQ, tests, etc
+4. IMPLEMENTATION.md ← Lo que se ha construido
 
-## 🎯 Conceptos Clave
+## Conceptos clave
 
-### Domain (Lo que el negocio sabe)
-- **Usuario** (Agregado) - Raíz que encapsula la lógica
-- **Email, Name** (Value Objects) - Validación embedded
-- **UsuarioCreado** (Domain Events) - Lo que pasó
-- **IUsuarioRepository** (Puertos) - Contrato
+### Domain
+- Usuario (Agregado) - Raíz que encapsula la lógica
+- Email, Name (Value Objects) - Validación integrada
+- UsuarioCreado (Domain Events) - Lo que pasó
+- IUsuarioRepository (Puertos) - Contrato
 
-### Application (Lo que la app hace)
-- **5 Use Cases** - Crear, Actualizar, Eliminar, Obtener, Listar
-- **1 Saga** - Escucha eventos y orquesta procesos
-- **DTOs** - Entrada/salida de datos
+### Application
+- 5 use cases - Crear, actualizar, eliminar, obtener, listar
+- 1 saga - Escucha eventos y orquesta procesos
+- DTOs - Entrada/salida de datos
 
-### Infrastructure (Cómo lo hace)
-- **Controller** - REST endpoints
-- **Repository** - Persistencia (hoy en-memory)
-- **Mappers** - Domain ↔ DTO
-- **Event Publisher** - Emite eventos
+### Infrastructure
+- Controller - REST endpoints
+- Repository - Persistencia (hoy en mémoire)
+- Mappers - Domain ↔ DTO
+- Event publisher - Emite eventos
 
-## 🔄 Flujo de Ejemplo: Crear Usuario
+## Flujo de ejemplo: Crear usuario
 
 ```
 POST /api/usuarios
   └─> UsuarioController.crearUsuario()
        └─> CrearUsuarioUseCase.execute()
             ├─ Valida email único (Repository)
-            ├─ Crea Value Objects
-            ├─ Instancia Usuario (genera evento)
+            ├─ Crea value objects
+            ├─ Instancia usuario (genera evento)
             ├─ Persiste (Repository.save)
             └─ Emite evento
                  └─> UsuarioSaga.handleUsuarioCreado()
@@ -79,15 +79,15 @@ POST /api/usuarios
                       └─ Notificar otros servicios
 ```
 
-## ✅ Validación
+## Validación
 
-Todos los Value Objects validan en su constructor:
-- **Email** - Formato válido
-- **Name** - Mínimo 2 caracteres
+Todos los value objects validan en su constructor:
+- Email - Formato válido
+- Name - Mínimo 2 caracteres
 
 Las excepciones se lanzan automáticamente y se manejan en el controlador.
 
-## 🔌 Los 5 Endpoints
+## Los 5 endpoints
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
@@ -97,15 +97,15 @@ Las excepciones se lanzan automáticamente y se manejan en el controlador.
 | PUT | /api/usuarios/:id | Actualizar |
 | DELETE | /api/usuarios/:id | Eliminar |
 
-## 🎯 Próximo Paso
+## Próximo paso
 
-**Lee ARCHITECTURE.md para entender cada componente en detalle.**
+Lee ARCHITECTURE.md para entender cada componente en detalle.
 
 ---
 
 Esta es una arquitectura profesional lista para:
-- ✅ Crecer en complejidad
-- ✅ Agregar nuevos módulos
-- ✅ Cambiar de tecnología (BD, eventos, etc)
-- ✅ Testear fácilmente
-- ✅ Mantener código limpio
+- Crecer en complejidad
+- Agregar nuevos módulos
+- Cambiar de tecnología (BD, eventos, etc.)
+- Testear fácilmente
+- Mantener código limpio
