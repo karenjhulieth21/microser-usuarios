@@ -4,8 +4,9 @@ import { Usuario } from '../../domain/entities/usuario';
 import { CrearUsuarioDTO } from '../dto/usuario.dto';
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
 import { UsuarioApplicationService } from '../services/usuario-application.service';
-import { Email } from '../../domain/value-objects/email';
 import { PasswordService } from '../../infrastructure/security/password.service';
+import { CodigoAcceso } from '../../domain/value-objects/codigo-acceso';
+import { SolicitarAccesoResponseDTO } from '../dto/usuario.dto';
 
 @Injectable()
 export class CrearUsuarioUseCase {
@@ -16,30 +17,51 @@ export class CrearUsuarioUseCase {
     private readonly passwordService: PasswordService,
   ) {}
 
-  async execute(dto: CrearUsuarioDTO): Promise<string> {
-    let email: string;
+  async execute(dto: CrearUsuarioDTO): Promise<SolicitarAccesoResponseDTO> {
+    let acceso: CodigoAcceso;
 
     try {
-      email = Email.create(dto.email).value;
+      acceso = CodigoAcceso.create(dto.codigo, dto.anioRegistro);
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
-      if (message === 'Invalid institutional email domain') {
-        throw UsuarioDomainException.invalidInstitutionalEmail();
+      if (message === 'Invalid registration year') {
+        throw UsuarioDomainException.invalidRegistrationYear();
       }
-      throw UsuarioDomainException.invalidEmail();
+      throw UsuarioDomainException.invalidAccessCode();
     }
 
-    const usuarioExistente = await this.usuarioRepository.findByEmail(email);
+    const usuarioExistente =
+      await this.usuarioRepository.findByCodigoAndAnioRegistro(
+        acceso.codigo,
+        acceso.anioRegistro,
+      );
+
     if (usuarioExistente) {
-      throw UsuarioDomainException.userAlreadyExists(email);
+      throw UsuarioDomainException.userCodeAlreadyExists(
+        acceso.codigo,
+        acceso.anioRegistro,
+      );
     }
 
     const temporaryPassword = this.passwordService.generateTemporaryPassword();
     const passwordHash = this.passwordService.hashPassword(temporaryPassword);
 
-    const usuario = Usuario.create(email, passwordHash);
+    const usuario = Usuario.create(
+      acceso.codigo,
+      acceso.anioRegistro,
+      passwordHash,
+    );
     await this.applicationService.saveAndPublishEvents(usuario);
 
-    return usuario.id;
+    return {
+      userId: usuario.id,
+      codigo: usuario.codigo,
+      anioRegistro: usuario.anioRegistro,
+      rol: usuario.rol,
+      mustChangePassword: usuario.mustChangePassword,
+      message:
+        'Usuario creado. Se genero una contrasena temporal que debe cambiarse al ingresar.',
+      temporaryPassword,
+    };
   }
 }

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
 import { ActualizarUsuarioDTO } from '../dto/usuario.dto';
-import { Email } from '../../domain/value-objects/email';
+import { CodigoAcceso } from '../../domain/value-objects/codigo-acceso';
 
 @Injectable()
 export class ActualizarUsuarioUseCase {
@@ -18,25 +18,39 @@ export class ActualizarUsuarioUseCase {
       throw UsuarioDomainException.userNotFound(id);
     }
 
-    if (dto.email) {
-      let email: string;
+    if (dto.codigo || dto.anioRegistro) {
+      let acceso: CodigoAcceso;
 
       try {
-        email = Email.create(dto.email).value;
+        acceso = CodigoAcceso.create(
+          dto.codigo ?? usuario.codigo,
+          dto.anioRegistro ?? usuario.anioRegistro,
+        );
       } catch (error) {
         const message = error instanceof Error ? error.message : '';
-        if (message === 'Invalid institutional email domain') {
-          throw UsuarioDomainException.invalidInstitutionalEmail();
+        if (message === 'Invalid registration year') {
+          throw UsuarioDomainException.invalidRegistrationYear();
         }
-        throw UsuarioDomainException.invalidEmail();
+        throw UsuarioDomainException.invalidAccessCode();
       }
 
-      const usuarioConEmail = await this.usuarioRepository.findByEmail(email);
-      if (usuarioConEmail && usuarioConEmail.id !== usuario.id) {
-        throw UsuarioDomainException.userAlreadyExists(email);
+      const usuarioConCodigo =
+        await this.usuarioRepository.findByCodigoAndAnioRegistro(
+          acceso.codigo,
+          acceso.anioRegistro,
+        );
+
+      if (usuarioConCodigo && usuarioConCodigo.id !== usuario.id) {
+        throw UsuarioDomainException.userCodeAlreadyExists(
+          acceso.codigo,
+          acceso.anioRegistro,
+        );
       }
 
-      usuario.updateEmail(email);
+      usuario.updateAccessData(
+        acceso.codigo,
+        acceso.anioRegistro,
+      );
     }
 
     await this.usuarioRepository.save(usuario);

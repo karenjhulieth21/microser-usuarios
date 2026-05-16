@@ -16,7 +16,6 @@ import { CambiarPasswordUseCase } from './application/use-cases/cambiar-password
 import { UsuarioApplicationService } from './application/services/usuario-application.service';
 import { UsuarioSaga } from './application/sagas/usuario.saga';
 import { PasswordService } from './infrastructure/security/password.service';
-import { EmailService } from './infrastructure/notifications/email.service';
 
 
 @Module({
@@ -35,7 +34,6 @@ import { EmailService } from './infrastructure/notifications/email.service';
     CambiarPasswordUseCase,
     UsuarioApplicationService,
     PasswordService,
-    EmailService,
     // Infrastructure Layer
     {
       provide: 'IUsuarioRepository',

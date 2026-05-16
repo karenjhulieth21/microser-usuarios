@@ -1,13 +1,13 @@
 import { Db } from 'mongodb';
 
 export const USUARIO_COLLECTION = 'usuarios';
-export const UNIVALLE_EMAIL_PATTERN =
-  '^[A-Za-z0-9._%+-]+@correounivalle\\.edu\\.co$';
 
 export interface UsuarioDocument {
   _id: string;
   id: string;
-  email: string;
+  codigo: string;
+  anioRegistro: number;
+  rol: string;
   passwordHash: string;
   mustChangePassword: boolean;
   createdAt: Date;
@@ -20,7 +20,9 @@ export const usuarioCollectionValidator = {
     required: [
       '_id',
       'id',
-      'email',
+      'codigo',
+      'anioRegistro',
+      'rol',
       'passwordHash',
       'mustChangePassword',
       'createdAt',
@@ -36,10 +38,19 @@ export const usuarioCollectionValidator = {
         bsonType: 'string',
         description: 'UUID del usuario',
       },
-      email: {
+      codigo: {
         bsonType: 'string',
-        description: 'Correo institucional del usuario',
-        pattern: UNIVALLE_EMAIL_PATTERN,
+        description: 'Codigo institucional usado para ingresar',
+        pattern: '^[123][0-9]*$',
+      },
+      anioRegistro: {
+        bsonType: 'number',
+        description: 'Ano en el que se registro el usuario',
+        minimum: 1900,
+      },
+      rol: {
+        enum: ['administrativo', 'docente', 'estudiante'],
+        description: 'Rol derivado del primer digito del codigo',
       },
       passwordHash: {
         bsonType: 'string',
@@ -76,8 +87,15 @@ export async function ensureUsuarioCollectionSchema(db: Db): Promise<void> {
       validator: usuarioCollectionValidator,
     });
   }
+  const collection = db.collection<UsuarioDocument>(USUARIO_COLLECTION);
+  const indexes = await collection.indexes();
 
-  await db
-    .collection<UsuarioDocument>(USUARIO_COLLECTION)
-    .createIndex({ email: 1 }, { unique: true, name: 'uq_usuarios_email' });
+  if (indexes.some((index) => index.name === 'uq_usuarios_email')) {
+    await collection.dropIndex('uq_usuarios_email');
+  }
+
+  await collection.createIndex(
+    { codigo: 1, anioRegistro: 1 },
+    { unique: true, name: 'uq_usuarios_codigo_anio' },
+  );
 }

@@ -1,45 +1,56 @@
 export class CrearUsuarioDTO {
-  email: string;
+  codigo: string;
+  anioRegistro: number;
 }
 
 export class ActualizarUsuarioDTO {
-  email?: string;
+  codigo?: string;
+  anioRegistro?: number;
 }
 
 export class UsuarioResponseDTO {
   id: string;
-  email: string;
+  codigo: string;
+  anioRegistro: number;
+  rol: string;
   mustChangePassword: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export class SolicitarAccesoDTO {
-  email: string;
+  codigo: string;
+  anioRegistro: number;
 }
 
 export class SolicitarAccesoResponseDTO {
   userId: string;
-  email: string;
+  codigo: string;
+  anioRegistro: number;
+  rol: string;
   mustChangePassword: boolean;
   message: string;
-  temporaryPasswordPreview?: string;
+  temporaryPassword: string;
 }
 
 export class LoginDTO {
-  email: string;
+  codigo: string;
+  anioRegistro: number;
   password: string;
 }
 
 export class LoginResponseDTO {
   userId: string;
-  email: string;
+  codigo: string;
+  anioRegistro: number;
+  rol: string;
   mustChangePassword: boolean;
   message: string;
 }
 
 export class CambiarPasswordDTO {
-  email: string;
+  codigo: string;
+  anioRegistro: number;
   currentPassword: string;
   newPassword: string;
 }

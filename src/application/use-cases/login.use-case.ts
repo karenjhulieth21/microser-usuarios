@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUsuarioRepository } from '../../domain/ports/usuario-repository.port';
 import { LoginDTO, LoginResponseDTO } from '../dto/usuario.dto';
-import { Email } from '../../domain/value-objects/email';
 import { UsuarioDomainException } from '../../domain/exceptions/usuario-domain-exception';
 import { PasswordService } from '../../infrastructure/security/password.service';
+import { CodigoAcceso } from '../../domain/value-objects/codigo-acceso';
 
 @Injectable()
 export class LoginUseCase {
@@ -14,15 +14,18 @@ export class LoginUseCase {
   ) {}
 
   async execute(dto: LoginDTO): Promise<LoginResponseDTO> {
-    let email: string;
+    let acceso: CodigoAcceso;
 
     try {
-      email = Email.create(dto.email).value;
+      acceso = CodigoAcceso.create(dto.codigo, dto.anioRegistro);
     } catch {
       throw UsuarioDomainException.invalidCredentials();
     }
 
-    const usuario = await this.usuarioRepository.findByEmail(email);
+    const usuario = await this.usuarioRepository.findByCodigoAndAnioRegistro(
+      acceso.codigo,
+      acceso.anioRegistro,
+    );
     if (!usuario) {
       throw UsuarioDomainException.invalidCredentials();
     }
@@ -38,7 +41,9 @@ export class LoginUseCase {
 
     return {
       userId: usuario.id,
-      email: usuario.email,
+      codigo: usuario.codigo,
+      anioRegistro: usuario.anioRegistro,
+      rol: usuario.rol,
       mustChangePassword: usuario.mustChangePassword,
       message: usuario.mustChangePassword
         ? 'Ingreso exitoso. Debes cambiar tu contrasena temporal.'

@@ -3,9 +3,9 @@ import { DomainEvent } from '../base-classes/domain-event';
 export class UsuarioCreado extends DomainEvent {
   constructor(
     readonly usuarioId: string,
-    readonly email: string,
-    readonly nombre: string,
-    readonly apellido: string,
+    readonly codigo: string,
+    readonly anioRegistro: number,
+    readonly rol: string,
   ) {
     super();
   }
@@ -18,9 +18,9 @@ export class UsuarioCreado extends DomainEvent {
 export class UsuarioActualizado extends DomainEvent {
   constructor(
     readonly usuarioId: string,
-    readonly email: string,
-    readonly nombre: string,
-    readonly apellido: string,
+    readonly codigo: string,
+    readonly anioRegistro: number,
+    readonly rol: string,
   ) {
     super();
   }

@@ -13,24 +13,27 @@ export class UsuarioDomainException extends DomainException {
     );
   }
 
-  static userAlreadyExists(email: string): UsuarioDomainException {
+  static userCodeAlreadyExists(
+    codigo: string,
+    anioRegistro: number,
+  ): UsuarioDomainException {
     return new UsuarioDomainException(
-      `El usuario con email ${email} ya existe`,
-      'USER_ALREADY_EXISTS',
+      `El usuario con codigo ${codigo} y ano de registro ${anioRegistro} ya existe`,
+      'USER_CODE_ALREADY_EXISTS',
     );
   }
 
-  static invalidEmail(): UsuarioDomainException {
+  static invalidAccessCode(): UsuarioDomainException {
     return new UsuarioDomainException(
-      'El email proporcionado no es valido',
-      'INVALID_EMAIL',
+      'El codigo de acceso debe ser numerico e iniciar con 1, 2 o 3',
+      'INVALID_ACCESS_CODE',
     );
   }
 
-  static invalidInstitutionalEmail(): UsuarioDomainException {
+  static invalidRegistrationYear(): UsuarioDomainException {
     return new UsuarioDomainException(
-      'El email debe pertenecer al dominio @correounivalle.edu.co',
-      'INVALID_INSTITUTIONAL_EMAIL',
+      'El ano de registro no es valido',
+      'INVALID_REGISTRATION_YEAR',
     );
   }
 

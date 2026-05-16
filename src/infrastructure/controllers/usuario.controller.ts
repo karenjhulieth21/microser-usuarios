@@ -20,6 +20,7 @@ import {
   CrearUsuarioDTO,
   ActualizarUsuarioDTO,
   UsuarioResponseDTO,
+  SolicitarAccesoResponseDTO,
 } from '../../application/dto/usuario.dto';
 
 import { UsuarioMapper } from '../persistence/mappers/usuario.mapper';
@@ -39,10 +40,11 @@ export class UsuarioController {
 
   
   @Post()
-  async crearUsuario(@Body() dto: CrearUsuarioDTO): Promise<{ id: string }> {
+  async crearUsuario(
+    @Body() dto: CrearUsuarioDTO,
+  ): Promise<SolicitarAccesoResponseDTO> {
     try {
-      const id = await this.crearUsuarioUseCase.execute(dto);
-      return { id };
+      return await this.crearUsuarioUseCase.execute(dto);
     } catch (error) {
       if (error instanceof UsuarioDomainException) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

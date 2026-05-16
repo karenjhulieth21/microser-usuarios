@@ -1,6 +1,6 @@
 // Domain Layer Exports
 export { Usuario } from './entities/usuario';
-export { Email } from './value-objects/email';
+export { CodigoAcceso } from './value-objects/codigo-acceso';
 export { Name } from './value-objects/name';
 export { UsuarioCreado, UsuarioActualizado, UsuarioEliminado } from './events/usuario-events';
 export { IUsuarioRepository, IDomainEventPublisher } from './ports/usuario-repository.port';

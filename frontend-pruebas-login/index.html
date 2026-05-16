@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pruebas de acceso - Usuarios</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="panel access-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Microservicio de usuarios</p>
+            <h1>Pruebas de acceso</h1>
+          </div>
+          <span id="apiStatus" class="status-pill">API local</span>
+        </div>
+
+        <form id="configForm" class="config-row">
+          <label>
+            URL API
+            <input
+              id="apiBaseUrl"
+              type="url"
+              value="http://localhost:3002/api"
+              autocomplete="off"
+            />
+          </label>
+          <button type="submit" class="secondary-button">Guardar</button>
+        </form>
+
+        <div class="role-grid" aria-label="Tipos de usuario">
+          <button class="role-card" type="button" data-code-prefix="1">
+            <span>1</span>
+            <strong>Administrativo</strong>
+          </button>
+          <button class="role-card" type="button" data-code-prefix="2">
+            <span>2</span>
+            <strong>Docente</strong>
+          </button>
+          <button class="role-card" type="button" data-code-prefix="3">
+            <span>3</span>
+            <strong>Estudiante</strong>
+          </button>
+        </div>
+
+        <div class="forms-grid">
+          <form id="accessForm" class="tool-section">
+            <div class="section-title">
+              <h2>Generar acceso</h2>
+              <p>Crea o reinicia la contraseña temporal.</p>
+            </div>
+
+            <label>
+              Codigo
+              <input id="accessCode" name="codigo" inputmode="numeric" required />
+            </label>
+
+            <label>
+              Año de registro
+              <input
+                id="accessYear"
+                name="anioRegistro"
+                type="number"
+                min="1900"
+                required
+              />
+            </label>
+
+            <button type="submit">Solicitar acceso</button>
+          </form>
+
+          <form id="loginForm" class="tool-section">
+            <div class="section-title">
+              <h2>Login</h2>
+              <p>Ingresa con código, año y contraseña.</p>
+            </div>
+
+            <label>
+              Codigo
+              <input id="loginCode" name="codigo" inputmode="numeric" required />
+            </label>
+
+            <label>
+              Año de registro
+              <input
+                id="loginYear"
+                name="anioRegistro"
+                type="number"
+                min="1900"
+                required
+              />
+            </label>
+
+            <label>
+              Contraseña
+              <input id="loginPassword" name="password" type="password" required />
+            </label>
+
+            <button type="submit">Ingresar</button>
+          </form>
+        </div>
+      </section>
+
+      <aside class="panel session-panel">
+        <div class="section-title">
+          <h2>Usuario identificado</h2>
+          <p>Resultado del último acceso exitoso.</p>
+        </div>
+
+        <dl class="user-details">
+          <div>
+            <dt>ID</dt>
+            <dd id="currentUserId">Sin sesión</dd>
+          </div>
+          <div>
+            <dt>Código</dt>
+            <dd id="currentCode">-</dd>
+          </div>
+          <div>
+            <dt>Año</dt>
+            <dd id="currentYear">-</dd>
+          </div>
+          <div>
+            <dt>Rol</dt>
+            <dd id="currentRole">-</dd>
+          </div>
+          <div>
+            <dt>Cambio requerido</dt>
+            <dd id="currentMustChange">-</dd>
+          </div>
+        </dl>
+
+        <form id="changePasswordForm" class="tool-section compact">
+          <div class="section-title">
+            <h2>Cambiar contraseña</h2>
+            <p>Usa la temporal como contraseña actual.</p>
+          </div>
+
+          <label>
+            Contraseña actual
+            <input
+              id="currentPassword"
+              name="currentPassword"
+              type="password"
+              required
+            />
+          </label>
+
+          <label>
+            Nueva contraseña
+            <input
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              minlength="8"
+              required
+            />
+          </label>
+
+          <button type="submit">Actualizar contraseña</button>
+        </form>
+
+        <section class="result-box" aria-live="polite">
+          <div class="result-header">
+            <h2>Respuesta</h2>
+            <button id="copyTempPassword" class="secondary-button" type="button">
+              Usar temporal
+            </button>
+          </div>
+          <pre id="resultOutput">Esperando una acción...</pre>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

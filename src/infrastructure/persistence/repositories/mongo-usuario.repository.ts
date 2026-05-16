@@ -18,7 +18,7 @@ export class MongoUsuarioRepository implements IUsuarioRepository {
 
     await collection.updateOne(
       { _id: data.id },
-      { $set: { ...data, _id: data.id } },
+      { $set: { ...data, _id: data.id }, $unset: { email: '' } },
       { upsert: true }
     );
 
@@ -38,11 +38,14 @@ export class MongoUsuarioRepository implements IUsuarioRepository {
     });
   }
 
-  async findByEmail(email: string): Promise<Usuario | null> {
+  async findByCodigoAndAnioRegistro(
+    codigo: string,
+    anioRegistro: number,
+  ): Promise<Usuario | null> {
     const db = getMongoDb();
     const collection = db.collection<UsuarioDocument>(this.collectionName);
 
-    const data = await collection.findOne({ email });
+    const data = await collection.findOne({ codigo, anioRegistro });
     if (!data) return null;
 
     return this.mapper.toDomain({

@@ -6,7 +6,9 @@ export class UsuarioMapper extends Mapper<Usuario, UsuarioResponseDTO> {
   public toPersistence(domain: Usuario): any {
     return {
       id: domain.id,
-      email: domain.email,
+      codigo: domain.codigo,
+      anioRegistro: domain.anioRegistro,
+      rol: domain.rol,
       passwordHash: domain.passwordHash,
       mustChangePassword: domain.mustChangePassword,
       createdAt: domain.createdAt,
@@ -17,7 +19,9 @@ export class UsuarioMapper extends Mapper<Usuario, UsuarioResponseDTO> {
   public toDomain(raw: any): Usuario {
     return Usuario.reconstruct({
       id: raw.id,
-      email: raw.email,
+      codigo: raw.codigo,
+      anioRegistro: raw.anioRegistro,
+      rol: raw.rol,
       passwordHash: raw.passwordHash,
       mustChangePassword: Boolean(raw.mustChangePassword),
       createdAt: raw.createdAt,
@@ -28,7 +32,9 @@ export class UsuarioMapper extends Mapper<Usuario, UsuarioResponseDTO> {
   public toDTO(domain: Usuario): UsuarioResponseDTO {
     return {
       id: domain.id,
-      email: domain.email,
+      codigo: domain.codigo,
+      anioRegistro: domain.anioRegistro,
+      rol: domain.rol,
       mustChangePassword: domain.mustChangePassword,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,

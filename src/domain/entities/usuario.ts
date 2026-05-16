@@ -3,12 +3,16 @@ import { Entity } from './entity';
 
 interface UsuarioProps {
   id: string;
-  email: string;
+  codigo: string;
+  anioRegistro: number;
+  rol: UsuarioRol;
   passwordHash: string;
   mustChangePassword: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type UsuarioRol = 'administrativo' | 'docente' | 'estudiante';
 
 export class Usuario extends Entity<UsuarioProps> {
   private props: UsuarioProps;
@@ -18,12 +22,18 @@ export class Usuario extends Entity<UsuarioProps> {
     this.props = props;
   }
 
-  static create(email: string, passwordHash: string): Usuario {
+  static create(
+    codigo: string,
+    anioRegistro: number,
+    passwordHash: string,
+  ): Usuario {
     const now = new Date();
 
     return new Usuario({
       id: randomUUID(),
-      email,
+      codigo,
+      anioRegistro,
+      rol: Usuario.resolveRol(codigo),
       passwordHash,
       mustChangePassword: true,
       createdAt: now,
@@ -39,8 +49,18 @@ export class Usuario extends Entity<UsuarioProps> {
     });
   }
 
-  updateEmail(email: string): void {
-    this.props.email = email;
+  static resolveRol(codigo: string): UsuarioRol {
+    if (codigo.startsWith('1')) return 'administrativo';
+    if (codigo.startsWith('2')) return 'docente';
+    if (codigo.startsWith('3')) return 'estudiante';
+
+    throw new Error('Invalid user code prefix');
+  }
+
+  updateAccessData(codigo: string, anioRegistro: number): void {
+    this.props.codigo = codigo;
+    this.props.anioRegistro = anioRegistro;
+    this.props.rol = Usuario.resolveRol(codigo);
     this.touch();
   }
 
@@ -60,8 +80,16 @@ export class Usuario extends Entity<UsuarioProps> {
     this.props.updatedAt = new Date();
   }
 
-  get email(): string {
-    return this.props.email;
+  get codigo(): string {
+    return this.props.codigo;
+  }
+
+  get anioRegistro(): number {
+    return this.props.anioRegistro;
+  }
+
+  get rol(): UsuarioRol {
+    return this.props.rol;
   }
 
   get passwordHash(): string {
